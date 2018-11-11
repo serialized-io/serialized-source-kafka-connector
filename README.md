@@ -16,7 +16,7 @@ Copy `target/kafka-source-connector-jar-with-dependencies.jar` to your `kafka/pl
 
 Create a config file eg. `kafka/config/serialized-source.properties`
 
-Sample config:
+### Sample config
 
 ```
 name=SerializedSourceConnector
