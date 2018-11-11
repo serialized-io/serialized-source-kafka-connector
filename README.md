@@ -12,9 +12,15 @@ mvn clean install
 
 ## Configure
 
+Ensure your destination topic is created. If not run the following:
+
+```
+kafka/bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic serialized-events
+```
+
 Make sure your plugin directory (plugin.path) is set in `kafka/config/connect-standalone.properties` or `kafka/config/connect-distributed.properties` depending on which one your are using.
 
-Create a config file eg. `kafka/config/serialized-source.properties`. See example config params below.
+Create a config file, eg. `kafka/config/serialized-source.properties`. See example config params below.
 
 ### Sample config
 
@@ -38,5 +44,9 @@ poll.delay.ms (defaults to 2000)
 
 Copy `target/kafka-source-connector-jar-with-dependencies.jar` to your `kafka/plugins` directory.
 
+## Running
 
+```
+kafka/bin/connect-standalone.sh ../config/connect-standalone.properties ../config/serialized-source.properties
+```
 
