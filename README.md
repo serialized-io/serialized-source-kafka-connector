@@ -21,8 +21,15 @@ Create a config file eg. `kafka/config/serialized-source.properties`
 ```
 name=SerializedSourceConnector
 connector.class=io.serialized.kafka.connect.SerializedSourceConnector
+topic=<destination-topic-name>
 serialized.access.key=<your-access-key>
 serialized.secret.access.key=<your-secret-access-key>
-topic=<destination-topic-name>
-batch.size=10
+```
+
+### Optional config parameters
+
+```
+feed.name (defaults to _all)
+batch.size (defaults to 100)
+poll.delay.ms (defaults to 2000)
 ```
