@@ -153,12 +153,14 @@ public class SerializedSourceTask extends SourceTask {
       public long sequenceNumber;
       public String aggregateId;
       public long timestamp;
+      public String feedName;
       public List<Event> events;
 
       public static class Event {
         public String eventId;
         public String eventType;
-        public LinkedHashMap data;
+        public Map<String, Object> data;
+        public String encryptedData;
       }
     }
   }
