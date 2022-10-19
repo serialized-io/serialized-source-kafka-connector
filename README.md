@@ -38,6 +38,7 @@ serialized.secret.access.key=<your-secret-access-key>
 feed.name (defaults to _all)
 batch.size (defaults to 100)
 poll.delay.ms (defaults to 2000)
+wait.time.ms (defaults to 55000)
 ```
 
 ## Deploying
