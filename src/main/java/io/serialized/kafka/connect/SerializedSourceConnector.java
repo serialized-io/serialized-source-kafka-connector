@@ -26,10 +26,12 @@ public class SerializedSourceConnector extends SourceConnector {
   static final String TOPIC_CONFIG = "topic";
   static final String TASK_BATCH_SIZE_CONFIG = "batch.size";
   static final String POLL_DELAY_MS_CONFIG = "poll.delay.ms";
+  static final String WAIT_TIME_MS_CONFIG = "wait.time.ms";
 
   private static final String DEFAULT_FEED_NAME = "_all";
   private static final int DEFAULT_TASK_BATCH_SIZE = 100;
   private static final int DEFAULT_POLL_DELAY_MS = 2000;
+  private static final int DEFAULT_WAIT_TIME_MS = 55000;
 
   private static final ConfigDef CONFIG_DEF = new ConfigDef()
       .define(SERIALIZED_ACCESS_KEY, Type.STRING, null, Importance.HIGH, "Serialized Access Key")
@@ -37,12 +39,14 @@ public class SerializedSourceConnector extends SourceConnector {
       .define(FEED_NAME, Type.STRING, DEFAULT_FEED_NAME, Importance.LOW, "Name of feed to poll events from")
       .define(TOPIC_CONFIG, Type.LIST, Importance.HIGH, "The topic to publish events to")
       .define(TASK_BATCH_SIZE_CONFIG, Type.INT, DEFAULT_TASK_BATCH_SIZE, Importance.LOW, "The maximum number of records the Source task can fetch at a time")
-      .define(POLL_DELAY_MS_CONFIG, Type.INT, DEFAULT_POLL_DELAY_MS, Importance.LOW, "Delay between polls in ms");
+      .define(POLL_DELAY_MS_CONFIG, Type.INT, DEFAULT_POLL_DELAY_MS, Importance.LOW, "Delay between polls in ms")
+      .define(WAIT_TIME_MS_CONFIG, Type.INT, DEFAULT_WAIT_TIME_MS, Importance.LOW, "Max wait time, in ms, when long-polling");
 
   private String feedName;
   private String topic;
   private int batchSize;
   private int pollDelayMs;
+  private int waitTimeMs;
   private String accessKey;
   private String secretAccessKey;
 
@@ -59,6 +63,7 @@ public class SerializedSourceConnector extends SourceConnector {
     topic = topics.get(0);
     batchSize = parsedConfig.getInt(TASK_BATCH_SIZE_CONFIG);
     pollDelayMs = parsedConfig.getInt(POLL_DELAY_MS_CONFIG);
+    waitTimeMs = parsedConfig.getInt(WAIT_TIME_MS_CONFIG);
     accessKey = parsedConfig.getString(SERIALIZED_ACCESS_KEY);
     secretAccessKey = parsedConfig.getString(SERIALIZED_SECRET_ACCESS_KEY);
   }
@@ -77,6 +82,7 @@ public class SerializedSourceConnector extends SourceConnector {
     config.put(TOPIC_CONFIG, topic);
     config.put(TASK_BATCH_SIZE_CONFIG, String.valueOf(batchSize));
     config.put(POLL_DELAY_MS_CONFIG, String.valueOf(pollDelayMs));
+    config.put(WAIT_TIME_MS_CONFIG, String.valueOf(waitTimeMs));
     config.put(SERIALIZED_ACCESS_KEY, accessKey);
     config.put(SERIALIZED_SECRET_ACCESS_KEY, secretAccessKey);
     configs.add(config);

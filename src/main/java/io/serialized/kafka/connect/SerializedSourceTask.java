@@ -14,14 +14,19 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES;
 import static com.fasterxml.jackson.databind.SerializationFeature.FAIL_ON_EMPTY_BEANS;
-import static io.serialized.kafka.connect.SerializedSourceConnector.*;
+import static io.serialized.kafka.connect.SerializedSourceConnector.FEED_NAME;
+import static io.serialized.kafka.connect.SerializedSourceConnector.POLL_DELAY_MS_CONFIG;
+import static io.serialized.kafka.connect.SerializedSourceConnector.SERIALIZED_ACCESS_KEY;
+import static io.serialized.kafka.connect.SerializedSourceConnector.SERIALIZED_SECRET_ACCESS_KEY;
+import static io.serialized.kafka.connect.SerializedSourceConnector.TASK_BATCH_SIZE_CONFIG;
+import static io.serialized.kafka.connect.SerializedSourceConnector.TOPIC_CONFIG;
+import static io.serialized.kafka.connect.SerializedSourceConnector.WAIT_TIME_MS_CONFIG;
 import static java.lang.String.format;
 import static java.util.Collections.singletonMap;
 import static org.apache.kafka.connect.data.Schema.STRING_SCHEMA;
@@ -41,14 +46,16 @@ public class SerializedSourceTask extends SourceTask {
   private String topic;
   private int batchSize;
   private int pollDelayMs;
+  private int waitTimeMs;
   private long lastConsumedSequenceNumber;
 
   @Override
   public void start(Map<String, String> props) {
     feedName = props.get(FEED_NAME);
     topic = props.get(TOPIC_CONFIG);
-    batchSize = Integer.valueOf(props.get(TASK_BATCH_SIZE_CONFIG));
-    pollDelayMs = Integer.valueOf(props.get(POLL_DELAY_MS_CONFIG));
+    batchSize = Integer.parseInt(props.get(TASK_BATCH_SIZE_CONFIG));
+    pollDelayMs = Integer.parseInt(props.get(POLL_DELAY_MS_CONFIG));
+    waitTimeMs = Integer.parseInt(props.get(WAIT_TIME_MS_CONFIG));
     objectMapper = newObjectMapper();
     httpClient = newHttpClient(props.get(SERIALIZED_ACCESS_KEY), props.get(SERIALIZED_SECRET_ACCESS_KEY));
     lastConsumedSequenceNumber = calculateLastConsumedSequenceNumber();
@@ -101,6 +108,7 @@ public class SerializedSourceTask extends SourceTask {
         .addPathSegment(feedName)
         .addQueryParameter("since", Long.toString(sequenceNumber))
         .addQueryParameter("limit", Long.toString(batchSize))
+        .addQueryParameter("waitTime", Long.toString(waitTimeMs))
         .build();
     return new Request.Builder().url(url).build();
   }
