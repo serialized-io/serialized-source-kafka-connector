@@ -17,7 +17,7 @@
 
     <mockito.version>2.13.0</mockito.version>
     <slf4j.version>1.7.25</slf4j.version>
-    <guava.version>31.1-jre</guava.version>
+    <guava.version>32.0.0-jre</guava.version>
     <retrofit.version>2.4.0</retrofit.version>
     <rxjava.version>2.2.2</rxjava.version>
     <maven.enforcer.version>1.4.1</maven.enforcer.version>
